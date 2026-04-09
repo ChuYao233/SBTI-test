@@ -44,9 +44,18 @@ export function sampleQuestions(count: QuestionCount): Question[] {
 
   // 插入补充题（随机位置）
   const insertAt = Math.floor(Math.random() * shuffled.length) + 1;
-  return [
+  // 失恋题插入不同位置，与饮酒题错开
+  const insertAt2 = Math.floor(Math.random() * (shuffled.length - 1)) + 1;
+  const hbPos = insertAt2 >= insertAt ? insertAt2 + 1 : insertAt2;
+
+  const mid = [
     ...shuffled.slice(0, insertAt),
     specialQuestions[0],
     ...shuffled.slice(insertAt),
+  ];
+  return [
+    ...mid.slice(0, hbPos),
+    specialQuestions[2],
+    ...mid.slice(hbPos),
   ];
 }
