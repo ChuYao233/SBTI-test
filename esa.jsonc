@@ -1,0 +1,5 @@
+{
+  // 阿里云 ESA Pages 构建配置
+  "buildCommand": "npm run build",
+  "buildOutputDirectory": "dist"
+}
