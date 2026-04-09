@@ -1,0 +1,28 @@
+import type { Question } from '../../types';
+
+export const specialQuestions: Question[] = [
+  {
+    id: 'drink_gate_q1',
+    dim: '',
+    special: true,
+    kind: 'drink_gate',
+    text: '您平时有什么爱好？',
+    options: [
+      { label: '吃喝拉撒', value: 1 },
+      { label: '艺术爱好', value: 2 },
+      { label: '饮酒', value: 3 },
+      { label: '健身', value: 4 },
+    ],
+  },
+  {
+    id: 'drink_gate_q2',
+    dim: '',
+    special: true,
+    kind: 'drink_trigger',
+    text: '您对饮酒的态度是？',
+    options: [
+      { label: '小酌怡情，喝不了太多。', value: 1 },
+      { label: '我习惯将白酒灌在保温杯，当白开水喝，酒精令我信服。', value: 2 },
+    ],
+  },
+];

@@ -1,0 +1,114 @@
+import type { Question } from '../../types';
+
+const E3: Question[] = [
+  {
+    id: 'E3_1', dim: 'E3',
+    text: '恋爱后，对象非常黏人，你作何感想？',
+    options: [
+      { label: '那很爽了', value: 1 },
+      { label: '都行无所谓', value: 2 },
+      { label: '我更喜欢保留独立空间', value: 3 },
+    ],
+  },
+  {
+    id: 'E3_2', dim: 'E3',
+    text: '我在任何关系里都很重视个人空间',
+    options: [
+      { label: '我更喜欢依赖与被依赖', value: 1 },
+      { label: '看情况', value: 2 },
+      { label: '是的！（斩钉截铁地说道）', value: 3 },
+    ],
+  },
+  {
+    id: 'E3_3', dim: 'E3',
+    text: '两个人在一起，你理想的相处状态是',
+    options: [
+      { label: '24小时黏在一起，不黏不舒服。', value: 1 },
+      { label: '经常在一起，也有各自的时间。', value: 2 },
+      { label: '各有各的轨道，偶尔交汇就好。', value: 3 },
+    ],
+  },
+  {
+    id: 'E3_4', dim: 'E3',
+    text: '对象要看你的手机，你',
+    options: [
+      { label: '当然可以，我们之间没有秘密。', value: 1 },
+      { label: '有点别扭，但给了。', value: 2 },
+      { label: '拒绝，手机是个人隐私，信任才是关键。', value: 3 },
+    ],
+  },
+  {
+    id: 'E3_5', dim: 'E3',
+    text: '你和朋友出去玩，对象要求你实时发定位，你',
+    options: [
+      { label: '没问题，随时汇报嘛。', value: 1 },
+      { label: '有点烦，但发了。', value: 2 },
+      { label: '这不太合理，我需要自己的空间。', value: 3 },
+    ],
+  },
+  {
+    id: 'E3_6', dim: 'E3',
+    text: '你独处的时候，通常',
+    options: [
+      { label: '很快感到孤独，需要有人陪。', value: 1 },
+      { label: '能享受一会儿，但时间长了会想人。', value: 2 },
+      { label: '独处是我的充电方式，非常需要。', value: 3 },
+    ],
+  },
+  {
+    id: 'E3_7', dim: 'E3',
+    text: '恋爱之后朋友说你"整个人消失了"，你',
+    options: [
+      { label: '对，我把所有时间都给对方了，很正常。', value: 1 },
+      { label: '有点夸张，但确实减少了一些。', value: 2 },
+      { label: '不可能，我恋爱了也有自己的生活。', value: 3 },
+    ],
+  },
+  {
+    id: 'E3_8', dim: 'E3',
+    text: '对象突然说要在你家住一个月，你',
+    options: [
+      { label: '当然欢迎，我求之不得！', value: 1 },
+      { label: '可以，相处一下也挺好的。', value: 2 },
+      { label: '我的领地受到侵犯了，需要先谈规则。', value: 3 },
+    ],
+  },
+  {
+    id: 'E3_9', dim: 'E3',
+    text: '"合理的个人空间"在你的关系里是',
+    options: [
+      { label: '不需要，全部都可以分享。', value: 1 },
+      { label: '有一些，大事共享，小事自留。', value: 2 },
+      { label: '非常重要，这是关系健康的基础。', value: 3 },
+    ],
+  },
+  {
+    id: 'E3_10', dim: 'E3',
+    text: '你的密码，对象知道吗',
+    options: [
+      { label: '都知道，我们之间没有秘密。', value: 1 },
+      { label: '知道一部分。', value: 2 },
+      { label: '不知道，密码是隐私，和爱无关。', value: 3 },
+    ],
+  },
+  {
+    id: 'E3_11', dim: 'E3',
+    text: '你不在的时候，对象去朋友家玩到很晚，你',
+    options: [
+      { label: '一直发消息问在哪、几点回来、和谁在一起。', value: 1 },
+      { label: '发一条说晚了注意安全就行了。', value: 2 },
+      { label: '随便，ta又不是我的附属物。', value: 3 },
+    ],
+  },
+  {
+    id: 'E3_12', dim: 'E3',
+    text: '你对"亲密关系"的理解是',
+    options: [
+      { label: '你中有我我中有你，边界模糊才叫亲密。', value: 1 },
+      { label: '既亲近又保有自我，两个人共同成长。', value: 2 },
+      { label: '两个独立宇宙偶尔交汇，各自运行。', value: 3 },
+    ],
+  },
+];
+
+export default E3;
