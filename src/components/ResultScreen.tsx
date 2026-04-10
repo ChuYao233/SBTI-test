@@ -2,10 +2,14 @@ import type { ScoreResult } from '../engine/score';
 import { dimensionMeta, DIM_EXPLANATIONS, dimensionOrder } from '../data/dimensions';
 import { TYPE_IMAGES } from '../data/types';
 import SiteFooter from './SiteFooter';
+import { useState, useCallback } from 'react';
+import { encodeShare } from '../engine/encode';
 
 interface Props {
   result: ScoreResult;
   onRestart: () => void;
+  isShareView?: boolean;
+  typeCounts?: Record<string, number>;
 }
 
 const LEVEL_COLOR: Record<string, string> = {
@@ -16,15 +20,62 @@ const LEVEL_COLOR: Record<string, string> = {
 const LEVEL_LABEL: Record<string, string> = { L: '低', M: '中', H: '高' };
 const RANK_MEDAL = ['🥇', '🥈', '🥉'];
 
-export default function ResultScreen({ result, onRestart }: Props) {
+export default function ResultScreen({ result, onRestart, isShareView = false, typeCounts = {} }: Props) {
   const { finalType, dimScores, ranked } = result;
   const imgSrc = TYPE_IMAGES[finalType.code];
   const top3 = ranked.slice(0, 3);
 
+  const [copied, setCopied] = useState(false);
+  const handleShare = useCallback(async () => {
+    const eParam = encodeShare({
+      code: finalType.code,
+      similarity: finalType.similarity,
+      norms: dimScores.map((d) => d.normalized),
+      secondaryCode: result.secondaryType?.code,
+      secondarySimilarity: result.secondaryType?.similarity,
+    });
+    const base = `${window.location.origin}${window.location.pathname}`;
+    const url = `${base}?e=${eParam}`;
+    const shareData = {
+      title: `我的 SBTI 人格是 ${finalType.code}「${finalType.cn}」`,
+      text: `${finalType.intro}\n来测测你是什么人格？`,
+      url,
+    };
+    // 优先唤起系统分享
+    if (navigator.share && navigator.canShare?.(shareData)) {
+      try {
+        await navigator.share(shareData);
+        return;
+      } catch {
+        // 用户取消分享，不做处理
+        return;
+      }
+    }
+    // 不支持 Web Share API，回退到复制链接
+    navigator.clipboard.writeText(url).then(() => {
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2000);
+    }).catch(() => {
+      prompt('复制下方链接分享给朋友：', url);
+    });
+  }, [finalType.code, finalType.cn, finalType.intro]);
+
   return (
     <div className="min-h-screen bg-[#f4f8f4] py-8 px-4 sm:px-6">
-      {/* 整体最大宽度放大，桌面两栏 */}
       <div className="max-w-5xl mx-auto space-y-5">
+
+        {/* 分享模式横幅 */}
+        {isShareView && (
+          <div className="flex items-center justify-between gap-4 bg-[#1a2b1e] text-white px-5 py-3.5 rounded-2xl">
+            <span className="text-sm font-bold">👀 你正在查看朋友的测试结果 · 想知道你是什么人格？</span>
+            <button
+              onClick={onRestart}
+              className="shrink-0 text-xs font-black bg-[#3a8050] hover:bg-[#2d6640] px-4 py-2 rounded-xl transition-colors"
+            >
+              去测一测
+            </button>
+          </div>
+        )}
 
         {/* ── 头部：人格卡 ── */}
         <div className="bg-white rounded-3xl border border-[#cde3d1] overflow-hidden">
@@ -53,6 +104,12 @@ export default function ResultScreen({ result, onRestart }: Props) {
               <div className="inline-flex w-fit items-center gap-2 bg-[#e8f3ea] border border-[#c6e0cb] rounded-full px-4 py-1.5 text-xs font-bold text-[#3a6644] mb-4">
                 {finalType.badge}
               </div>
+              {typeCounts[finalType.code] !== undefined && typeCounts[finalType.code] > 0 && (
+                <div className="flex items-center gap-1.5 text-xs text-[#9ab5a0] mb-3">
+                  <span className="w-1.5 h-1.5 rounded-full bg-[#7bbf8a]" />
+                  已有 <span className="font-bold text-[#5a7060]">{typeCounts[finalType.code].toLocaleString()}</span> 人测出此人格
+                </div>
+              )}
               <p className="text-base text-[#5a7060] italic leading-relaxed">"{finalType.intro}"</p>
             </div>
           </div>
@@ -171,19 +228,28 @@ export default function ResultScreen({ result, onRestart }: Props) {
 
             {/* 操作按钮 */}
             <div className="flex flex-col gap-3">
+              {!isShareView && (
+                <button
+                  onClick={onRestart}
+                  className="w-full py-3 rounded-xl bg-[#3a8050] text-white text-sm font-bold
+                             hover:bg-[#2d6640] active:scale-95 transition-all shadow-md shadow-[#3a805030]"
+                >
+                  重新测试
+                </button>
+              )}
               <button
-                onClick={onRestart}
-                className="w-full py-3 rounded-xl bg-[#3a8050] text-white text-sm font-bold
-                           hover:bg-[#2d6640] active:scale-95 transition-all shadow-md shadow-[#3a805030]"
+                onClick={handleShare}
+                className="w-full py-3 rounded-xl border border-[#cde3d1] bg-white text-sm font-bold
+                           hover:border-[#5b9967] transition-colors flex items-center justify-center gap-2"
               >
-                重新测试
+                {copied ? '✓ 已复制链接' : '🔗 分享给朋友'}
               </button>
               <button
                 onClick={onRestart}
                 className="w-full py-3 rounded-xl border border-[#cde3d1] bg-white text-sm font-bold
                            hover:border-[#5b9967] transition-colors"
               >
-                回到首页
+                {isShareView ? '我也要测' : '回到首页'}
               </button>
             </div>
           </div>

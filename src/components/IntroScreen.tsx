@@ -1,7 +1,11 @@
 import type { QuestionCount } from '../engine/sampler';
+import { TYPE_LIBRARY } from '../data/types';
 
 interface Props {
   onStart: (count: QuestionCount) => void;
+  onOpenTypes: () => void;
+  statsTotal?: number;
+  statsLoaded?: boolean;
 }
 
 const QUIZ_OPTIONS: { count: QuestionCount; label: string; desc: string; time: string; color: string }[] = [
@@ -35,7 +39,7 @@ function GithubIcon() {
   );
 }
 
-export default function IntroScreen({ onStart }: Props) {
+export default function IntroScreen({ onStart, onOpenTypes, statsTotal, statsLoaded = false }: Props) {
   return (
     <div className="min-h-screen flex flex-col items-center justify-center px-4 py-16 bg-[#f4f8f4]">
       <div className="w-full max-w-2xl space-y-6">
@@ -54,7 +58,32 @@ export default function IntroScreen({ onStart }: Props) {
             基于 15 维度人格模型，采用<strong className="text-[#3a6644]">贝叶斯概率匹配</strong>算法。<br />
             本测试仅供娱乐，别拿它当诊断书。
           </p>
+          <div className="mt-4 inline-flex items-center gap-2 bg-white border border-[#cde3d1] px-4 py-2 rounded-full">
+            <span className="w-2 h-2 rounded-full bg-[#3a8050] animate-pulse" />
+            <span className="text-sm text-[#9ab5a0]">累计访问数：</span>
+            <span className="text-sm font-bold text-[#3a6644]">
+              {statsLoaded ? (statsTotal ?? 0).toLocaleString() : '···'}
+            </span>
+          </div>
         </div>
+
+        {/* ── 人格图鉴入口 ── */}
+        <button
+          onClick={onOpenTypes}
+          className="w-full flex items-center justify-between px-5 py-4 rounded-2xl border border-[#cde3d1] bg-white
+                     hover:border-[#5b9967] hover:shadow-md hover:shadow-[#5b996712] active:scale-[0.99] transition-all duration-150"
+        >
+          <div className="flex items-center gap-3">
+            <span className="text-xl">📖</span>
+            <div className="text-left">
+              <div className="text-sm font-black text-[#1a2b1e]">人格图鉴</div>
+              <div className="text-xs text-[#9ab5a0]">查看全部 {Object.keys(TYPE_LIBRARY).length} 种人格介绍</div>
+            </div>
+          </div>
+          <svg viewBox="0 0 24 24" className="w-4 h-4 fill-none stroke-[#9ab5a0] stroke-2" strokeLinecap="round" strokeLinejoin="round">
+            <path d="M9 18l6-6-6-6" />
+          </svg>
+        </button>
 
         {/* ── 选题量 ── */}
         <div>

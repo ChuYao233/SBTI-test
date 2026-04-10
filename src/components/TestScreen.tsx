@@ -1,4 +1,4 @@
-import { useState, useEffect, useMemo } from 'react';
+import { useState, useEffect, useMemo, useCallback, useRef } from 'react';
 import SiteFooter from './SiteFooter';
 import type { Question } from '../types';
 import { specialQuestions } from '../data/questions/index';
@@ -32,6 +32,21 @@ export default function TestScreen({ questions, onSubmit, onBack }: Props) {
   // 重置答案（换题组时）
   useEffect(() => { setAnswers({}); }, [questions]);
 
+  // 跳到第一道未答题
+  const [highlightId, setHighlightId] = useState<string | null>(null);
+  const highlightTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  const scrollToFirst = useCallback(() => {
+    const first = visible.find((q) => answers[q.id] === undefined);
+    if (!first) return;
+    const el = document.querySelector(`[data-qid="${first.id}"]`);
+    if (!el) return;
+    el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    setHighlightId(first.id);
+    if (highlightTimer.current) clearTimeout(highlightTimer.current);
+    highlightTimer.current = setTimeout(() => setHighlightId(null), 1800);
+  }, [visible, answers]);
+
   function handleChange(qid: string, value: number, isGate: boolean) {
     setAnswers((prev) => {
       const next = { ...prev, [qid]: value };
@@ -59,15 +74,18 @@ export default function TestScreen({ questions, onSubmit, onBack }: Props) {
           {visible.map((q, idx) => (
             <article
               key={q.id}
-              className="bg-white rounded-2xl border border-[#cde3d1] p-5 shadow-sm"
+              data-qid={q.id}
+              className={`rounded-2xl border p-5 shadow-sm transition-all duration-300
+                ${
+                  highlightId === q.id
+                    ? 'border-[#3a8050] bg-[#edf7ef] shadow-[#3a805030] shadow-md'
+                    : 'bg-white border-[#cde3d1]'
+                }`}
             >
               <div className="flex items-center justify-between mb-3">
                 <span className="text-xs font-bold bg-[#e8f3ea] text-[#3a6644] px-3 py-1 rounded-full">
                   第 {idx + 1} 题
                 </span>
-                {q.special && (
-                  <span className="text-xs text-[#9ab5a0]">补充题</span>
-                )}
               </div>
               <p className="text-sm leading-relaxed text-[#1a2b1e] mb-4 whitespace-pre-wrap">
                 {q.text}
@@ -107,11 +125,26 @@ export default function TestScreen({ questions, onSubmit, onBack }: Props) {
 
         {/* 底部操作栏 */}
         <div className="mt-8 flex items-center justify-between gap-4 flex-wrap">
-          <p className={`text-sm ${complete ? 'text-[#3a6644] font-bold' : 'text-[#9ab5a0]'}`}>
-            {complete
-              ? '✓ 都做完了。现在可以把你的电子魂魄交给结果页审判。'
-              : '全选完才会放行。世界已经够乱了，起码把题做完整。'}
-          </p>
+          <div className="flex flex-col gap-2">
+            <p className={`text-sm ${complete ? 'text-[#3a6644] font-bold' : 'text-[#9ab5a0]'}`}>
+              {complete
+                ? '✓ 都做完了。现在可以把你的电子魂魄交给结果页审判。'
+                : '全选完才会放行。世界已经够乱了，起码把题做完整。'}
+            </p>
+            {!complete && (
+              <button
+                onClick={scrollToFirst}
+                className="self-start flex items-center gap-1.5 text-xs font-bold text-[#3a8050]
+                           bg-[#edf7ef] border border-[#a8d4b0] px-3 py-1.5 rounded-lg
+                           hover:bg-[#daeeda] transition-colors"
+              >
+                <svg viewBox="0 0 24 24" className="w-3.5 h-3.5 fill-none stroke-current stroke-2" strokeLinecap="round" strokeLinejoin="round">
+                  <path d="M12 5v14M5 12l7 7 7-7" />
+                </svg>
+                跳到未做题（还剩 {total - done} 题）
+              </button>
+            )}
+          </div>
           <div className="flex gap-3">
             <button
               onClick={onBack}
