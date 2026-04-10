@@ -5,18 +5,18 @@ const S3: Question[] = [
     id: 'S3_1', dim: 'S3',
     text: '我一定要不断往上爬、变得更厉害',
     options: [
-      { label: '不认同', value: 1 },
-      { label: '中立', value: 2 },
-      { label: '认同', value: 3 },
+      { label: '躺着多舒服，往上爬干嘛，脑子有坑。', value: 1 },
+      { label: '偶尔鸡血，偶尔躺尸，佛系进取中。', value: 2 },
+      { label: '是的，我天生就有一种不服输的病，治不好。', value: 3 },
     ],
   },
   {
     id: 'S3_2', dim: 'S3',
     text: '外人的评价对我来说无所吊谓。',
     options: [
-      { label: '不认同', value: 1 },
-      { label: '中立', value: 2 },
-      { label: '认同', value: 3 },
+      { label: '不认同，我每天都在被人眼光驯化，已经是社会性动物了。', value: 1 },
+      { label: '有时候能做到，有时候还是会被戳一下。', value: 2 },
+      { label: '认同，别人说什么关我屁事，我又不靠他们活。', value: 3 },
     ],
   },
   {
